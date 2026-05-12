@@ -1,0 +1,14 @@
+{
+  "name": "populens-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Populens AI - Population Growth Prediction MERN platform",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node scripts/start-server-dev.js",
+    "client": "npm run dev --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
