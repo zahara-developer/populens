@@ -121,7 +121,12 @@ const AuthPage = () => {
       navigate(nextPath, { replace: true });
     } catch (submitError) {
       console.error("Auth request failed:", submitError.response?.data || submitError);
-      setError(submitError.response?.data?.message || "Authentication failed");
+      setError(
+        submitError.response?.data?.message ||
+        (submitError.code === "ERR_NETWORK"
+          ? "Unable to reach the API. Check the deployed API URL and server CORS settings."
+          : "Authentication failed")
+      );
       setSuccess("");
     } finally {
       setLoading(false);
@@ -219,11 +224,10 @@ const AuthPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveMode("login")}
-                className={`rounded-full px-4 py-3 text-sm font-bold transition ${
-                  mode === "login"
-                    ? "bg-emerald-600 text-white shadow-[0_10px_24px_rgba(5,150,105,0.28)]"
-                    : "text-white/70 hover:text-white"
-                }`}
+                className={`rounded-full px-4 py-3 text-sm font-bold transition ${mode === "login"
+                  ? "bg-emerald-600 text-white shadow-[0_10px_24px_rgba(5,150,105,0.28)]"
+                  : "text-white/70 hover:text-white"
+                  }`}
               >
                 Login
               </button>
@@ -231,11 +235,10 @@ const AuthPage = () => {
               <button
                 type="button"
                 onClick={() => setActiveMode("signup")}
-                className={`rounded-full px-4 py-3 text-sm font-bold transition ${
-                  mode === "signup"
-                    ? "bg-emerald-600 text-white shadow-[0_10px_24px_rgba(5,150,105,0.28)]"
-                    : "text-white/70 hover:text-white"
-                }`}
+                className={`rounded-full px-4 py-3 text-sm font-bold transition ${mode === "signup"
+                  ? "bg-emerald-600 text-white shadow-[0_10px_24px_rgba(5,150,105,0.28)]"
+                  : "text-white/70 hover:text-white"
+                  }`}
               >
                 Signup
               </button>

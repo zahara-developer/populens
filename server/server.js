@@ -8,16 +8,25 @@ const predictionRoutes = require("./routes/predictionRoutes");
 dotenv.config();
 
 const app = express();
+const configuredClientOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const allowedOriginPatterns = [
+  /^http:\/\/localhost:\d+$/,
+  /^http:\/\/127\.0\.0\.1:\d+$/,
+  /^https:\/\/.*\.vercel\.app$/
+];
+
+const isAllowedOrigin = (origin) =>
+  configuredClientOrigins.includes(origin) ||
+  allowedOriginPatterns.some((pattern) => pattern.test(origin));
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOriginPatterns = [
-        /^http:\/\/localhost:\d+$/,
-        /^http:\/\/127\.0\.0\.1:\d+$/
-      ];
-
-      if (!origin || allowedOriginPatterns.some((pattern) => pattern.test(origin))) {
+      if (!origin || isAllowedOrigin(origin)) {
         callback(null, true);
         return;
       }
@@ -58,7 +67,7 @@ const startServer = async () => {
 
     await connectDB();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
